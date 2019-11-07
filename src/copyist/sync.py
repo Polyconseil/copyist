@@ -34,6 +34,8 @@ def sync_files(file_generators, context, *, verbose=False, dry_run=False):
         else:
             file_content = ""
 
+        original_content = file_content
+
         for generator_name in generators:
             try:
                 generator = _import_name(generator_name)
@@ -55,9 +57,10 @@ def sync_files(file_generators, context, *, verbose=False, dry_run=False):
             else:
                 print(f"{filename}: up-to-date for {generator_name}")
 
-        if dry_run:
-            print(f"{filename}: skipping write due to --dry-run")
-            continue
+        if original_content != file_content:
+            if dry_run:
+                print(f"{filename}: skipping write due to --dry-run")
+                continue
 
-        with open(filename, "w") as f:
-            f.write(new_file_content)
+            with open(filename, "w") as f:
+                f.write(new_file_content)
