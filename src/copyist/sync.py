@@ -50,7 +50,11 @@ def sync_files(file_generators, context, *, verbose=False, dry_run=False):
                 if verbose:
                     diff = "\n".join(
                         difflib.unified_diff(
-                            file_content.splitlines(), new_file_content.splitlines(),
+                            file_content.splitlines(),
+                            new_file_content.splitlines(),
+                            fromfile="before",
+                            tofile="after",
+                            lineterm="",
                         )
                     )
                     print(diff)
