@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.2 (unreleased)
+0.2 (2019-11-07)
 ----------------
 
 - Only try to update the file if something changed
