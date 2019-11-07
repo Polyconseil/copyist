@@ -1,0 +1,5 @@
+include README.rst LICENSE
+graft src/copyist
+prune tests
+exclude CHANGELOG.rst tox.ini
+global-exclude *.py[cod] __pycache__ *.so
