@@ -15,6 +15,13 @@ except ImportError:
     import importlib.metadata as importlib_metadata
 
 
+# Special error codes
+# according to http://tldp.org/LDP/abs/html/exitcodes.html,
+# those shouldn't have confusing meaning
+CONFIGURATION_NOT_FOUND = 10
+UNSYNCED_FILES = 11
+
+
 def parse_args():
     parser = argparse.ArgumentParser("copyist")
     parser.add_argument(
@@ -70,7 +77,7 @@ def main():
         file_generators, context = read_configuration(options.config)
     except exceptions.ConfigurationException as e:
         print(e.args[0])
-        sys.exit(1)
+        sys.exit(CONFIGURATION_NOT_FOUND)
 
     try:
         changed = sync.sync_files(
@@ -85,7 +92,7 @@ def main():
 
     if changed and options.check:
         print(f"Unsynced files: {', '.join(changed)}")
-        sys.exit(1)
+        sys.exit(UNSYNCED_FILES)
 
 
 if __name__ == "__main__":
