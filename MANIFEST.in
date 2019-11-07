@@ -1,5 +1,6 @@
-include README.rst LICENSE
+include README.rst LICENSE pyproject.toml
 graft src/copyist
+prune examples
 prune tests
 exclude CHANGELOG.rst tox.ini
 global-exclude *.py[cod] __pycache__ *.so
