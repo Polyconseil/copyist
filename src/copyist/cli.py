@@ -37,6 +37,12 @@ def parse_args():
     parser.add_argument(
         "--dry-run", action="store_true", default=False, help="Do not overwrite files"
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        default=False,
+        help="Error if a file needs to be changed - Implies --dry-run",
+    )
     return parser.parse_args()
 
 
@@ -67,11 +73,18 @@ def main():
         sys.exit(1)
 
     try:
-        sync.sync_files(
-            file_generators, context, verbose=options.verbose, dry_run=options.dry_run,
+        changed = sync.sync_files(
+            file_generators,
+            context,
+            verbose=options.verbose,
+            dry_run=options.dry_run or options.check,
         )
     except exceptions.SyncException as e:
         print(e.args[0])
+        sys.exit(1)
+
+    if changed and options.check:
+        print(f"Unsynced files: {', '.join(changed)}")
         sys.exit(1)
 
 

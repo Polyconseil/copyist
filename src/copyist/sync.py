@@ -27,6 +27,7 @@ def _import_name(generator):
 
 
 def sync_files(file_generators, context, *, verbose=False, dry_run=False):
+    changed = set()
     for filename, generators in file_generators.items():
         if os.path.exists(filename):
             with open(filename) as f:
@@ -49,7 +50,7 @@ def sync_files(file_generators, context, *, verbose=False, dry_run=False):
                 if verbose:
                     diff = "\n".join(
                         difflib.unified_diff(
-                            file_content.splitlines(), new_file_content.splitlines()
+                            file_content.splitlines(), new_file_content.splitlines(),
                         )
                     )
                     print(diff)
@@ -58,9 +59,11 @@ def sync_files(file_generators, context, *, verbose=False, dry_run=False):
                 print(f"{filename}: up-to-date for {generator_name}")
 
         if original_content != file_content:
+            changed.add(filename)
             if dry_run:
-                print(f"{filename}: skipping write due to --dry-run")
+                print(f"{filename}: skipping write")
                 continue
 
             with open(filename, "w") as f:
                 f.write(new_file_content)
+    return changed

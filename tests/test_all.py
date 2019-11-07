@@ -62,33 +62,36 @@ def test_config(tmpdir):
 
 def test_new_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
-    sync.sync_files(
+    changed_files = sync.sync_files(
         {"test": ["fake_sync_module.ensure_toto"]}, context={},
     )
     with open("test") as f:
         assert f.read() == "toto"
+    assert changed_files == {"test"}
 
 
 def test_overwrite_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
     with open("test", "w") as f:
         f.write("tata")
-    sync.sync_files(
+    changed_files = sync.sync_files(
         {"test": ["fake_sync_module.ensure_toto"]}, context={},
     )
     with open("test") as f:
         assert f.read() == "toto"
+    assert changed_files == {"test"}
 
 
 def test_update_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
     with open("test", "w") as f:
         f.write("oo")
-    sync.sync_files(
+    changed_files = sync.sync_files(
         {"test": ["fake_sync_module.ensure_odd_number_of_o"]}, context={},
     )
     with open("test") as f:
         assert f.read() == "ooo"
+    assert changed_files == {"test"}
 
 
 def test_combined(monkeypatch, tmpdir):
@@ -140,3 +143,27 @@ def test_with_context(monkeypatch, tmpdir):
     )
     with open("test") as f:
         assert f.read() == "foobar"
+
+
+def test_uptodate_file(monkeypatch, tmpdir):
+    monkeypatch.chdir(tmpdir)
+    with open("test", "w") as f:
+        f.write("toto")
+    changed_files = sync.sync_files(
+        {"test": ["fake_sync_module.ensure_toto"]}, context={},
+    )
+    assert not changed_files
+
+
+def test_multiple_files(monkeypatch, tmpdir):
+    monkeypatch.chdir(tmpdir)
+    with open("test", "w") as f:
+        f.write("toto")
+    changed_files = sync.sync_files(
+        {
+            "test": ["fake_sync_module.ensure_toto"],
+            "test2": ["fake_sync_module.ensure_toto"],
+        },
+        context={},
+    )
+    assert changed_files == {"test2"}

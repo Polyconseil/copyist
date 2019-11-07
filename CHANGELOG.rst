@@ -5,6 +5,7 @@ ChangeLog
 ----------------
 
 - Only try to update the file if something changed
+- Add ``--check`` option to check if all the files are up-to-date with their generators
 
 
 0.1 (2019-11-07)
