@@ -167,3 +167,30 @@ def test_multiple_files(monkeypatch, tmpdir):
         context={},
     )
     assert changed_files == {"test2"}
+
+
+def test_ensure_toml_stability(monkeypatch, tmpdir):
+    pyproject_file = tmpdir.join("pyproject.toml")
+    pyproject_file.write(
+        textwrap.dedent(
+            """
+        [tool.copyist]
+        [tool.copyist.files]
+        "pyproject.toml" = ["fake_sync_module.ensure_black_section"]
+        """
+        ).strip()
+    )
+
+    monkeypatch.chdir(tmpdir)
+    sync.sync_files(
+        {"pyproject.toml": ["fake_sync_module.ensure_black_section"]}, context={},
+    )
+    with open("pyproject.toml") as f:
+        first_version = f.read()
+
+    sync.sync_files(
+        {"pyproject.toml": ["fake_sync_module.ensure_black_section"]}, context={},
+    )
+    with open("pyproject.toml") as f:
+        second_version = f.read()
+    assert first_version == second_version

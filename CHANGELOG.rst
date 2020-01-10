@@ -4,7 +4,7 @@ ChangeLog
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Ensure stability of generated TOML via ``fill_tool_section`` helper
 
 
 0.2 (2019-11-07)

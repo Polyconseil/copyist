@@ -18,4 +18,4 @@ def fill_tool_section(previous_content, tool_name, section_text):
     else:
         current_state["tool"][tool_name] = tool_table
 
-    return tomlkit.dumps(current_state)
+    return tomlkit.dumps(current_state).strip() + "\n"
