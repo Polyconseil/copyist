@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.3 (unreleased)
+0.3 (2020-01-10)
 ----------------
 
 - Ensure stability of generated TOML via ``fill_tool_section`` helper
